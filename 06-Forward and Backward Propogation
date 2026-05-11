@@ -1,0 +1,182 @@
+import numpy as np
+
+# Neural Network Class
+class ANN:
+
+    # Initialize network
+    def __init__(self, in_size, h_size, out_size):
+
+        # Random weights
+        self.w1 = np.random.randn(in_size, h_size)
+        self.w2 = np.random.randn(h_size, out_size)
+
+        # Bias values
+        self.b1 = np.zeros((1, h_size))
+        self.b2 = np.zeros((1, out_size))
+
+    # Sigmoid activation function
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    # Derivative of sigmoid
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+
+    # Forward propagation
+    def forward(self, x):
+
+        # Hidden layer
+        self.z1 = np.dot(x, self.w1) + self.b1
+        self.a1 = self.sigmoid(self.z1)
+
+        # Output layer
+        self.z2 = np.dot(self.a1, self.w2) + self.b2
+        self.out = self.sigmoid(self.z2)
+
+        return self.out
+
+    # Backpropagation
+    def backward(self, x, y, lr):
+
+        # Output error
+        error = y - self.out
+
+        # Output delta
+        d2 = error * self.sigmoid_derivative(self.out)
+
+        # Hidden layer error
+        error_hidden = d2.dot(self.w2.T)
+
+        # Hidden delta
+        d1 = error_hidden * self.sigmoid_derivative(self.a1)
+
+        # Update output weights
+        self.w2 += self.a1.T.dot(d2) * lr
+        self.b2 += np.sum(d2, axis=0, keepdims=True) * lr
+
+        # Update hidden weights
+        self.w1 += x.T.dot(d1) * lr
+        self.b1 += np.sum(d1, axis=0, keepdims=True) * lr
+
+    # Training function
+    def train(self, x, y, epochs, lr):
+
+        for epoch in range(epochs):
+
+            # Forward pass
+            self.forward(x)
+
+            # Backward pass
+            self.backward(x, y, lr)
+
+            # Print loss
+            if epoch % 1000 == 0:
+
+                loss = np.mean(np.square(y - self.out))
+
+                print("Epoch:", epoch, "Loss:", loss)
+
+
+# XOR Input
+x = np.array([
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
+])
+
+# XOR Output
+y = np.array([
+    [0],
+    [1],
+    [1],
+    [0]
+])
+
+# Create ANN
+nn = ANN(2, 4, 1)
+
+print("Training Started...\n")
+
+# Train network
+nn.train(x, y, epochs=10000, lr=0.1)
+
+# Final Output
+print("\nFinal Output:")
+
+output = nn.forward(x)
+
+for i in range(len(x)):
+
+    print(x[i], "->", output[i])
+
+
+
+
+
+1. Core Idea
+Neural network learning happens in TWO stages:
+
+Stage 1 — Forward Propagation
+Input moves:
+Input Layer → Hidden Layer → Output Layer
+Network produces prediction.
+
+Stage 2 — Backpropagation
+Error moves backward:
+Output Layer → Hidden Layer → Input Layer
+Weights are updated to reduce error.
+
+Forward propagation:
+You attempt exam and get marks.
+Backpropagation
+Teacher checks mistakes and tells corrections.
+You improve next time.
+That correction process:
+is backpropagation.
+2. Architecture of ANN
+Simple neural network:
+Input → Hidden → Output
+Each connection has:
+weight
+bias
+
+3. Forward Propagation Formula
+Weighted sum:
+z=wx+b
+Activation:
+a=g(z)
+Where:
+w = weights
+x = inputs
+b = bias
+g = activation function
+WHAT HAPPENS?
+Inputs multiplied with weights
+Bias added
+Activation function applied
+Output generated
+That’s forward propagation.
+
+4. Backpropagation Formula
+Error:
+Error=Target−Output
+Weight update:
+w=w+η(error)x
+Where:
+η = learning rate
+CORE IDEA OF BACKPROP
+If output is wrong:
+adjust weights
+reduce future error
+This is how ANN learns.
+
+5. What Actually Moves Backward?
+NOT the data.
+The:
+error
+gradients
+corrections
+move backward.
+
+VERY important viva point
