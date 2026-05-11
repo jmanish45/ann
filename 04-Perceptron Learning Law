@@ -1,0 +1,115 @@
+The perceptron learning algorithm updates weights iteratively based on prediction error to classify linearly separable data. 
+The decision boundary separates different output classes in the feature space.”
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Load dataset
+data = load_iris()
+
+# Features
+x = data.data[:, [0,2]]
+
+# Output classes
+y = np.where(data.target == 0, 0, 1)
+
+# Weight and bias
+w = np.zeros(2)
+b = 0
+
+# Learning rate
+lr = 0.1
+
+# Epochs
+epochs = 30
+
+# Training
+for epoch in range(epochs):
+
+    for i in range(len(x)):
+
+        yin = np.dot(x[i], w) + b
+
+        # Activation function
+        if yin >= 0:
+            out = 1
+        else:
+            out = 0
+
+        # Weight update
+        w = w + lr * (y[i] - out) * x[i]
+
+        # Bias update
+        b = b + lr * (y[i] - out)
+
+# Create decision region
+x1_min = x[:,0].min() - 1
+x1_max = x[:,0].max() + 1
+
+x2_min = x[:,1].min() - 1
+x2_max = x[:,1].max() + 1
+
+xx1, xx2 = np.meshgrid(
+    np.arange(x1_min, x1_max, 0.1),
+    np.arange(x2_min, x2_max, 0.1)
+)
+
+z = []
+
+for p in np.c_[xx1.ravel(), xx2.ravel()]:
+
+    yin = np.dot(p, w) + b
+
+    if yin >= 0:
+        z.append(1)
+    else:
+        z.append(0)
+
+z = np.array(z).reshape(xx1.shape)
+
+# Plot graph
+plt.contourf(xx1, xx2, z, alpha=0.4)
+
+plt.scatter(x[:,0], x[:,1], c=y)
+
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+
+plt.title("Perceptron Decision Region")
+
+plt.show()
+
+
+
+Steps to perform : 
+1. gedit perceptron.py
+2.Paste the code
+3.pip3 install scikit-learn  or sudo apt install python3-sklearn
+4.pip3 install matplotlib  
+5.python3 perceptron.py
+
+
+Q1. What is perceptron learning algorithm?
+A supervised learning algorithm used for binary classification that updates weights based on prediction error.
+
+Q2. What is decision boundary?
+A line or hyperplane separating different classes in feature space.
+
+Q3. What is learning rate?
+Learning rate controls magnitude of weight updates.
+
+Q4. Why use activation function?
+To decide neuron output based on weighted sum.
+
+Q5. What is linearly separable data?
+Data that can be separated using a straight line.
+
+Q6. Why perceptron fails for XOR?
+Because XOR is non-linearly separable.
+
+MOST IMPORTANT viva question.
+
+Q7. Difference between decision boundary and decision region?
+Decision Boundary	Decision Region
+Separating line	Area of classification
