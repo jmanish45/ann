@@ -1,0 +1,90 @@
+import numpy as np
+
+# Activation function
+def mp_net(yin, t):
+    if yin >= t:
+        return 1
+    else:
+        return 0
+
+# Input combinations
+x = np.array([
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
+])
+
+# Weights
+w = np.array([1,-1])
+
+# Threshold
+t = 1
+
+# Weighted sum
+yin = x @ w
+
+print("x1 x2 yin output")
+
+# Checking output
+for i in range(4):
+    y = mp_net(yin[i], t)
+    print(x[i][0], x[i][1], yin[i], y)
+
+
+
+
+Q1. What is MP neuron model?
+The McCulloch-Pitts neuron model is the earliest mathematical model of an artificial neuron that performs binary classification using weighted inputs and threshold logic.
+
+Q2. Why is it called linear threshold gate?
+Because: It computes linear weighted sum , Then compares against threshold
+
+Q3. What are limitations of MP neuron?
+Very important answer.
+Limitations:
+Produces only binary output
+Cannot learn automatically
+Weights are fixed
+No training mechanism
+Cannot solve complex non-linear problems
+
+Q4. Why use negative weight in ANDNOT?
+Negative weight creates inhibitory effect and behaves like NOT operation.
+
+Q5. What is threshold?
+Threshold is the minimum activation value required to produce output 1.
+
+Q6. What is activation value?
+Activation value is the weighted sum of inputs. : Yin =x1w1+x2w2
+	​
+
+Q7. Why is MP neuron important historically?
+Because it became the foundation of artificial neural networks and modern deep learning.
+
+Q1. Why use NumPy?
+
+Answer:
+NumPy provides efficient array and matrix operations required in neural network computations.
+
+Q2. What does @ operator mean?
+
+Answer:
+@ represents matrix multiplication in Python.
+
+Q3. Why use negative weight?
+
+Answer:
+Negative weight creates inhibitory effect required for NOT operation.
+
+Q4. What is dot product?
+Very important.
+
+Answer:
+Dot product is the sum of multiplication of corresponding input and weight values.
+
+	​
+Q5. Why threshold = 1?
+Because output should activate only for:
+[1,0]
+whose weighted sum becomes exactly 1.
