@@ -1,0 +1,108 @@
+import numpy as np
+
+# Sigmoid activation function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Derivative of sigmoid
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+# XOR input
+x = np.array([
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
+])
+
+# XOR output
+y = np.array([
+    [0],
+    [1],
+    [1],
+    [0]
+])
+
+# Random weights
+np.random.seed(1)
+
+w1 = np.random.rand(2,2)
+w2 = np.random.rand(2,1)
+
+# Bias
+b1 = np.random.rand(1,2)
+b2 = np.random.rand(1,1)
+
+# Learning rate
+lr = 0.5
+
+# Epochs
+epochs = 10000
+
+print("Training Started...\n")
+
+# Training
+for epoch in range(epochs):
+
+    # Forward propagation
+
+    z1 = np.dot(x, w1) + b1
+    a1 = sigmoid(z1)
+
+    z2 = np.dot(a1, w2) + b2
+    out = sigmoid(z2)
+
+    # Error
+    error = y - out
+
+    # Backpropagation
+
+    d2 = error * sigmoid_derivative(out)
+
+    d1 = d2.dot(w2.T) * sigmoid_derivative(a1)
+
+    # Weight update
+
+    w2 += a1.T.dot(d2) * lr
+    w1 += x.T.dot(d1) * lr
+
+    # Bias update
+
+    b2 += np.sum(d2, axis=0, keepdims=True) * lr
+    b1 += np.sum(d1, axis=0, keepdims=True) * lr
+
+    # Print error
+    if epoch % 2000 == 0:
+
+        print("Epoch:", epoch,
+              "Error:", np.mean(np.abs(error)))
+
+# Final output
+print("\nFinal Output:\n")
+
+for i in range(len(x)):
+
+    print(x[i], "->", out[i][0])
+
+
+
+
+Q1. Why can’t single perceptron solve XOR?
+Perfect answer:
+“XOR is not linearly separable because its output classes cannot be separated using a single straight line. Since a single perceptron creates only linear decision boundaries, it fails to solve XOR.”
+
+Q2. Why hidden layer is needed?
+Hidden layers enable the network to learn nonlinear relationships and complex decision boundaries.
+
+Q3. What is backpropagation?
+Backpropagation is a learning algorithm that propagates error backward through the network and updates weights to minimize loss.
+
+Q4. Why sigmoid activation function is used?
+Sigmoid is differentiable and outputs values between 0 and 1, making it suitable for gradient-based learning.
+
+Q5. What is gradient descent?
+Gradient descent is an optimization algorithm used to minimize error by updating weights in the opposite direction of the gradient.
+
+Q6. What is non-linearly separable data?
+Data that cannot be separated using a single straight line or hyperplane.
