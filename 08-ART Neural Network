@@ -1,0 +1,129 @@
+import numpy as np
+
+# ART1 Neural Network
+class ART1:
+
+    def __init__(self, n, m, rho):
+
+        # Number of inputs
+        self.n = n
+
+        # Number of clusters
+        self.m = m
+
+        # Vigilance parameter
+        self.rho = rho
+
+        # Bottom-up weights
+        self.w = np.ones((n, m)) / (1 + n)
+
+        # Top-down weights
+        self.t = np.ones((m, n))
+
+    # Activation calculation
+    def activate(self, x):
+
+        return np.dot(x, self.w)
+
+    # Training
+    def train(self, x):
+
+        # Calculate activations
+        a = self.activate(x)
+
+        # Sort clusters
+        index = np.argsort(a)[::-1]
+
+        # Check best matching cluster
+        for j in index:
+
+            # Similarity test
+            match = np.bitwise_and(
+                x.astype(int),
+                self.t[j].astype(int)
+            )
+
+            # Match ratio
+            ratio = np.sum(match) / np.sum(x)
+
+            # Vigilance test
+            if ratio >= self.rho:
+
+                # Update weights
+                self.t[j] = match
+
+                self.w[:, j] = (
+                    match.astype(float)
+                ) / (0.5 + np.sum(match))
+
+                return j
+
+        return -1
+
+
+# Input patterns
+x = np.array([
+    [1,1,0,0],
+    [1,0,0,0],
+    [0,0,1,1],
+    [0,0,0,1]
+])
+
+# Create ART1 network
+art = ART1(4, 2, 0.5)
+
+print("ART1 Clustering\n")
+
+# Train patterns
+for i, p in enumerate(x):
+
+    c = art.train(p)
+
+    if c != -1:
+
+        print("Pattern", i, p,
+              "-> Cluster", c)
+
+    else:
+
+        print("Pattern", i, p,
+              "-> No Match")
+
+
+
+
+
+
+ART - ADAPTIVE RESONANCE THEORY
+
+
+Q1. What is ART?
+Adaptive Resonance Theory is a neural network model that performs stable unsupervised learning without forgetting previous knowledge.
+ART is a neural network that: learns new patterns without forgetting old patterns.
+
+
+Stability Ability to:  remember old knowledge.
+Plasticity :  Ability to: learn new knowledge.
+
+Q2. What is vigilance parameter?
+Vigilance parameter controls similarity matching during clustering.
+
+Q3. What is stability-plasticity dilemma?
+The challenge of learning new information without forgetting previously learned information.
+
+Q4. Difference between ART1 and ART2?
+ART1	ART2
+Binary inputs	Continuous inputs
+
+Q5. Is ART supervised or unsupervised?
+Basic ART is unsupervised.
+ARTMAP is supervised.
+
+Q6. What is clustering?
+Grouping similar input patterns together.
+
+Q7. Why is ART important?
+Because it can continuously learn new patterns without catastrophic forgetting.
+
+Backpropagation ANN: learns using error correction
+ART: learns using similarity and clustering
